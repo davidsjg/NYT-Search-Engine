@@ -1,79 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
-    <link rel="stylesheet" href="style.css"/>
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Trigger Clicked</title>
+
+  <!-- Added link to the jQuery library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 <body>
-    
-<header>
-    <div class="jumbotron">
-        <h1 class="mainDisp"></h1>
-    </div>
-
 
 <container>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Search Parameters</h5>
-            <p>Search Term</p>
-            <input type="text" class="inputValue" id="searchTerm">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <div class="col">
-            <p>Number of Records to Retrieve </p>
-            <select class="form-select" aria-label="Disabled select example"
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="5">Five</option>
-                <option value="10">Ten</option>
-                </select>
-            </div>
-            <div class="col">
-            <p>Start Year (Optional): </p>
-            <input type="text" class="inputValue" id="startYear">
-        </div>
-        <div class="col">
-            <p>End Year (Optional)</p>
-            <input type="text" class="inputValue" id="endYear" >
-        </div>
+    
 
+
+
+
+    <div class="card" style="width: 18rem;margin:0 auto;">
+        <div class="card-body">
+            <div class="input-group mb-3">
+                <p>Enter Search Subject:</p>
+                <input type="text" id="searchInput"><br>
+            </div>
+
+            <select class="form-select mb-3" id="numSelect" aria-label="Default select example">
+                <option selected value="0">Number of Records</option>
+                <option id="oneRecord" value="1">1</option>
+                <option id="fiveRecord" value="5">5</option>
+                <option id="tenRecord" value="10">10</option>
+            </select>
+
+            <p>Start Year Search:</p>
+            <div>
+            <input type="text" id="yearSearch"><br>
+            </div>
+            <p>End Year Search:</p>
+            <div>
+            <input type="text" id="yearEnd"><br>
+            </div>
+
+            <!-- <div class="input-group mb-3">
+                <span class="input-group-text">End Year:</span>
+                <input type="text" class="form-control" id="yearEnd" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div> -->
+
+            <button type="button" class="btn mt-3 btn-primary" id="searchBtn">Search</button>
+            <button type="button" class="btn mt-3 btn-primary" id="clearBtn">Clear Results</button>
+        </div>
     </div>
 
-    <input type="submit" value="Search" id="searchBtn">
-    <input type="submit" value="Clear" id="clearBtn">
+    <div class="card" style="margin:0 auto; text-align: center;">
+        <h2>SEARCH RESULTS</h2>
+    <div id="results">
 
-    <container>
-    <p>Top Articles</p>
-    <div class="topArticles" id="topArticles"> 
+    </div>
+    </div>
+
 </container>
 
 
-</header>
-<body>
-
-</body>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
-    $(".mainDisp").text("New York Times Search")
+//makes sure hmtl do is loaded into the browser, all elements are present 
+
+    // This "document.ready" code isn't necessary in this example... but is useful to become familiar with.
+    // "document.ready" makes sure that our JavaScript doesn't get run until the HTML document is finished loading.
+    $(document).ready(function() {
+    var searchTerm = ""
+
+    var startYear
+    var endYear
+    var returnOne = $("#oneRecord").val("data-value")
+    var returnFive = $("#fiveRecord").val("data-value")
+    var returnTen = $("tenRecord").val("return-data")
+
+
+
+
+    
+    $("#searchBtn").on("click", function(){
+
+    var numRecords = $("#numSelect").find(":selected").text()
+    console.log(numRecords)
+
+    startYear = $("#yearSearch").val() + "0101"
+    endYear = $("#yearEnd").val() + "1231"
+    searchTerm = $("#searchInput").val()
+    
+    var APIkey = "R1a31F4tBjCUaM2ho8GtIFsrSdtXt30M"
+    var nytURL = "https:api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchTerm + "&facet_fields=source&facet=true&begin_date=" + startYear + "&end_date=" + endYear + "&api-key=" + APIkey
+
+
+    console.log($("#yearSearch").val())
+
+    $.ajax ({
+        url: nytURL,
+        method: "GET"
+    }).then (function(response) {
+        var getArray = []
+        // getArray.length = numSelect val=
+        // var numArticle = response.response.docs[0]
+
+
+        for (var i = 0; i < numRecords; i++) {
+
+            getArray.push(response.response.docs[i])
+            var headline = getArray[i].headline.main
+            var author = getArray[i].byline.original
+            var webLink = getArray[i].web_url
+            var leadParagraph = getArray[i].lead_paragraph
+
+
+            // card[i] = $("<card>")    HOW DO I DYNAMICALLY CREATE AND PUT INFO IN A CONTAINER/WRAPPER OR CARD TO BE DISPLAYED
+            headlineDisp = $("<div>").text("Headline: " + headline)
+            authorDisp = $("<div>").text("AuthorL " + author)
+            leadParaDisp = $("<div>").text("Story: " + leadParagraph)
+            weblinkDisp = $("<a>").attr("href", webLink).text(webLink)
+
+            
+            $("#results").append(headlineDisp)
+            $("#results").append(authorDisp)
+            $("#results").append(leadParagraph)
+            $("#results").append(weblinkDisp)
+
+
+            // $("results").append(container)
+        
+        }
+
+
+        // For explicit parsing of a string to HTML, use the $.parseHTML() method.
+            //parse?
+        // <a href="url">link text</a>
+        // weblinkDisp = $("<div>").attr('href', 'webLink')
+        // weblinkText = 
+        // $("#results").append(weblinkText.)
 
 
 
 
 
-
-})
-
+    })
 
 
 
 
 
+    })
+
+
+
+    })
 </script>
-
+</body>
 </html>

@@ -1,43 +1,14 @@
-* {
-  background-origin: border-box;
-  margin: 0;
+body {
   padding: 0;
-}
-
-.jumbotron {
-  text-align: center;
-  vertical-align: center;
-  background-color: #002e5c;
-  color: white;
-  margin: 0 auto;
-}
-h1 {
-  text-align: center;
-  vertical-align: center;
-  background-color: #003f7e;
-  color: white;
-  margin: 0 auto;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 18px;
+  line-height: 150%;
+  color: #333;
+  background: #efeee7;
+  align-items: center;
 }
 
 .card {
-  text-align: center;
-  display: block;
-}
-
-/* #searchTerm {
-    text-align: center;
-    display: block;
-  } */
-
-.input-group {
-}
-/* .col {
-    background-color: #343a40;
-    color: white;
-  } */
-
-button {
-  background-color: #343a40;
-  color: #f3efef;
-  display: block;
+  background-color: cornsilk;
 }
